@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "craftable_enchants",
+  "version": "${version}",
+  "name": "Craftable Enchantments",
+  "description": "Adds an enchantment crafting table that lets you craft all the enchantments in the game",
+  "authors": [
+    "Daniel"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/craftable_enchants/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "daniel.craftable_enchants.CraftableEnchants"
+    ],
+    "client": [
+      "daniel.craftable_enchants.CraftableEnchants"
+    ]
+  },
+  "mixins": [
+    "craftable_enchants.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.2",
+    "fabric": "*",
+    "minecraft": "1.17.1"
+  }
+}
