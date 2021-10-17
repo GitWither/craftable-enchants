@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
-    private static final Identifier TEXTURE = new Identifier(CraftableEnchants.MOD_ID, "textures/gui/container/enchanting_crafting_table.png");
+    private static final Identifier TEXTURE = new Identifier(CraftableEnchants.MOD_ID, "textures/gui/container/enchantment_crafting_table.png");
 
     public EnchantmentCraftingScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -26,7 +26,7 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
         int y = (height - backgroundHeight) / 2;
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
-        this.textRenderer.draw(matrices, "fucking kys", 155, 90, 3419941);
+        //this.textRenderer.draw(matrices, "fucking kys", 155, 90, 3419941);
     }
 
     @Override
