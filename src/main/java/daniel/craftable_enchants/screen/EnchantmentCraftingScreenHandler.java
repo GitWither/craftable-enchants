@@ -7,10 +7,8 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.screen.EnchantmentScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 
 public class EnchantmentCraftingScreenHandler extends ScreenHandler {
@@ -45,7 +43,7 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
                 return stack.isOf(Items.LAPIS_LAZULI);
             }
         });
-        this.addSlot(new Slot(this.inventory, 1, 55, 47) {
+        this.addSlot(new Slot(this.inventory, 2, 55, 47) {
             public boolean canInsert(ItemStack stack) {
                 return true;
             }
