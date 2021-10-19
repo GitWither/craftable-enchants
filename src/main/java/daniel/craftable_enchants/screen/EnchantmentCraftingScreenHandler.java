@@ -14,6 +14,11 @@ import net.minecraft.screen.slot.Slot;
 public class EnchantmentCraftingScreenHandler extends ScreenHandler {
     private final ScreenHandlerContext context;
     private final Inventory inventory;
+    private Runnable inventoryChangeListener;
+
+    private final Slot bookSlot;
+    private final Slot lapisSlot;
+    private final Slot itemSlot;
 
     public EnchantmentCraftingScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, ScreenHandlerContext.EMPTY);
@@ -22,14 +27,18 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
     public EnchantmentCraftingScreenHandler(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
         super(CraftableEnchants.ENCHANTMENT_CRAFTING_SCREEN_HANDLER, syncId);
 
+        this.inventoryChangeListener = () -> {
+        };
+
         this.inventory = new SimpleInventory(3) {
             public void markDirty() {
                 super.markDirty();
                 EnchantmentCraftingScreenHandler.this.onContentChanged(this);
+                EnchantmentCraftingScreenHandler.this.inventoryChangeListener.run();
             }
         };
 
-        this.addSlot(new Slot(this.inventory, 0, 15, 47) {
+        bookSlot = this.addSlot(new Slot(this.inventory, 0, 15, 47) {
             public boolean canInsert(ItemStack stack) {
                 return stack.isOf(Items.BOOK);
             }
@@ -38,12 +47,12 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
                 return 1;
             }
         });
-        this.addSlot(new Slot(this.inventory, 1, 35, 47) {
+        lapisSlot = this.addSlot(new Slot(this.inventory, 1, 35, 47) {
             public boolean canInsert(ItemStack stack) {
                 return stack.isOf(Items.LAPIS_LAZULI);
             }
         });
-        this.addSlot(new Slot(this.inventory, 2, 55, 47) {
+        itemSlot = this.addSlot(new Slot(this.inventory, 2, 55, 47) {
             public boolean canInsert(ItemStack stack) {
                 return true;
             }
@@ -62,8 +71,25 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
 
         this.context = context;
     }
+
+    public void setInventoryChangeListener(Runnable inventoryChangeListener) {
+        this.inventoryChangeListener = inventoryChangeListener;
+    }
+
     @Override
     public boolean canUse(PlayerEntity player) {
         return canUse(this.context, player, CraftableEnchants.ENCHANTMENT_CRAFTING_TABLE);
+    }
+
+    public Slot getLapisSlot() {
+        return lapisSlot;
+    }
+
+    public Slot getItemSlot() {
+        return itemSlot;
+    }
+
+    public Slot getBookSlot() {
+        return bookSlot;
     }
 }

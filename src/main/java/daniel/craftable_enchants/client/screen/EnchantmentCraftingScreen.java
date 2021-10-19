@@ -2,6 +2,7 @@ package daniel.craftable_enchants.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import daniel.craftable_enchants.CraftableEnchants;
+import daniel.craftable_enchants.screen.EnchantmentCraftingScreenHandler;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -11,16 +12,27 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
 public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
     private static final Identifier TEXTURE = new Identifier(CraftableEnchants.MOD_ID, "textures/gui/container/enchantment_crafting_table.png");
 
+    List<EnchantmentLevelEntry> enchantments;
+    private int maxEnchants;
     private float scrollProgress;
+    private int firstEnchantment;
 
     public EnchantmentCraftingScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
+
+        ((EnchantmentCraftingScreenHandler)handler).setInventoryChangeListener(this::onInventoryChanged);
+    }
+
+    private void onInventoryChanged() {
+        this.enchantments = EnchantmentHelper.getPossibleEntries(1, ((EnchantmentCraftingScreenHandler)this.handler).getBookSlot().getStack(), true);
+        System.out.println(this.enchantments.size());
     }
 
     @Override
@@ -32,15 +44,29 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
         int y = (height - backgroundHeight) / 2;
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
-        List<EnchantmentLevelEntry> enchantments = EnchantmentHelper.getPossibleEntries(1, handler.slots.get(0).getStack(), true);
-        if (enchantments.size() > 0) {
-            for (int i = 0; i < 3; i++) {
-                drawTexture(matrices, x + 60, y + i * 19 + 16, 0, 166, 95, 19);
-                this.textRenderer.drawWithShadow(matrices, enchantments.get(i).enchantment.getName(1), x + 62, y + i * 19 + 20, 3419941);
+        if (enchantments != null) {
+            for (int i = firstEnchantment, yDelta = 0; i <  firstEnchantment + 3; i++, yDelta++) {
+                if (i < enchantments.size()) {
+                    drawTexture(matrices, x + 60, y + yDelta * 19 + 16, 0, 166, 95, 19);
+                    this.textRenderer.drawWithShadow(matrices, enchantments.get(i).enchantment.getName(1), x + 62, y + yDelta * 19 + 20, 3419941);
+                }
             }
         }
 
         //this.textRenderer.draw(matrices, "fucking kys", 155, 90, 3419941);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+
+        //this.firstEnchantment++
+        if (enchantments != null) {
+            this.firstEnchantment = MathHelper.clamp((int)(firstEnchantment - amount), 0, enchantments.size() - 3);
+
+            System.out.println(firstEnchantment + " : " + amount);
+        }
+
+        return true;
     }
 
     @Override
