@@ -21,6 +21,7 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
 
     private int firstEnchantment;
     boolean hasBook = false;
+    boolean scrollbarClicked = false;
 
     public EnchantmentCraftingScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -43,7 +44,7 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
         RenderSystem.setShaderTexture(0, TEXTURE);
-        drawTexture(matrices, x + 156, y + (int)(46 * ((float)firstEnchantment / 38)) + 16, hasBook ? 176 : 188, 0, 12, 15);
+        drawTexture(matrices, x + 156, y + (int)(46 * firstEnchantment / 38.0f) + 16, hasBook ? 176 : 188, 0, 12, 15);
 
         if (hasBook) {
             for (int i = firstEnchantment, yDelta = 0; i <  firstEnchantment + 3; i++, yDelta++) {
@@ -76,6 +77,30 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
         this.firstEnchantment = MathHelper.clamp((int)(firstEnchantment - amount), 0, Registry.ENCHANTMENT.getEntries().size() - 3);
 
         return true;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        this.scrollbarClicked = false;
+
+        int scrollbarZoneX = this.x + 156;
+        int scrollbarZoneY = this.y + 16;
+
+        if (mouseX >= scrollbarZoneX && mouseX <= scrollbarZoneX + 12 && mouseY >= scrollbarZoneY && mouseY <= scrollbarZoneY + 56) {
+            this.scrollbarClicked = true;
+            System.out.println("hello");
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (scrollbarClicked) {
+            this.firstEnchantment = MathHelper.clamp((int)((mouseY - 56) / 56f * 38), 0, Registry.ENCHANTMENT.getEntries().size() - 3);
+            System.out.println((int)((mouseY - 56) / 38 * Registry.ENCHANTMENT.getEntries().size()));
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Override
