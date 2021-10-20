@@ -7,8 +7,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -17,16 +15,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 
-import java.util.List;
-
 public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
     private static final Identifier TEXTURE = new Identifier(CraftableEnchants.MOD_ID, "textures/gui/container/enchantment_crafting_table.png");
     private static final int WHITE = (255 << 16) + (255 << 8) + 255;
 
-    List<EnchantmentLevelEntry> enchantments;
-    private int maxEnchants;
-    private float scrollProgress;
     private int firstEnchantment;
+    boolean hasBook = false;
 
     public EnchantmentCraftingScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -35,8 +29,7 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
     }
 
     private void onInventoryChanged() {
-        this.enchantments = EnchantmentHelper.getPossibleEntries(1, ((EnchantmentCraftingScreenHandler)this.handler).getBookSlot().getStack(), true);
-        System.out.println(this.enchantments.size());
+        hasBook = handler.slots.get(0).hasStack();
     }
 
     @Override
@@ -50,9 +43,9 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
         RenderSystem.setShaderTexture(0, TEXTURE);
-        drawTexture(matrices, x + 156, y + (int)(46 * ((float)firstEnchantment / 38)) + 16, 176, 0, 12, 15);
+        drawTexture(matrices, x + 156, y + (int)(46 * ((float)firstEnchantment / 38)) + 16, hasBook ? 176 : 188, 0, 12, 15);
 
-        if (handler.slots.get(0).hasStack()) {
+        if (hasBook) {
             for (int i = firstEnchantment, yDelta = 0; i <  firstEnchantment + 3; i++, yDelta++) {
                 Enchantment currentEnchantment = Registry.ENCHANTMENT.get(i);
 
@@ -80,9 +73,7 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
 
         //this.firstEnchantment++
-        if (enchantments != null) {
-            this.firstEnchantment = MathHelper.clamp((int)(firstEnchantment - amount), 0, Registry.ENCHANTMENT.getEntries().size() - 3);
-        }
+        this.firstEnchantment = MathHelper.clamp((int)(firstEnchantment - amount), 0, Registry.ENCHANTMENT.getEntries().size() - 3);
 
         return true;
     }
