@@ -6,6 +6,7 @@ import daniel.craftable_enchants.screen.EnchantmentCraftingScreenHandler;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,6 +14,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
 
 import java.util.List;
 
@@ -44,12 +46,12 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
         int y = (height - backgroundHeight) / 2;
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
-        if (enchantments != null) {
-            for (int i = firstEnchantment, yDelta = 0; i <  firstEnchantment + 3; i++, yDelta++) {
-                if (i < enchantments.size()) {
-                    drawTexture(matrices, x + 60, y + yDelta * 19 + 16, 0, 166, 95, 19);
-                    this.textRenderer.drawWithShadow(matrices, enchantments.get(i).enchantment.getName(1), x + 62, y + yDelta * 19 + 20, 3419941);
-                }
+        for (int i = firstEnchantment, yDelta = 0; i <  firstEnchantment + 3; i++, yDelta++) {
+            Enchantment currentEnchantment = Registry.ENCHANTMENT.get(i);
+
+            if (currentEnchantment != null) {
+                drawTexture(matrices, x + 60, y + yDelta * 19 + 16, 0, 166, 95, 19);
+                this.textRenderer.drawWithShadow(matrices, currentEnchantment.getName(1),x + 62, y + yDelta * 19 + 20, 3419941);
             }
         }
 
@@ -61,9 +63,9 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
 
         //this.firstEnchantment++
         if (enchantments != null) {
-            this.firstEnchantment = MathHelper.clamp((int)(firstEnchantment - amount), 0, enchantments.size() - 3);
+            this.firstEnchantment = MathHelper.clamp((int)(firstEnchantment - amount), 0, Registry.ENCHANTMENT.getEntries().size() - 3);
 
-            System.out.println(firstEnchantment + " : " + amount);
+            System.out.println(firstEnchantment + " : " + amount + " ");
         }
 
         return true;
@@ -81,5 +83,6 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
         super.init();
         // Center the title
         titleX = (backgroundWidth - textRenderer.getWidth(title)) / 2;
+        titleY -= 2;
     }
 }
