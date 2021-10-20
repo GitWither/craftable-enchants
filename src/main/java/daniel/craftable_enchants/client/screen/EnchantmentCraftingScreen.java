@@ -49,6 +49,9 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
         int y = (height - backgroundHeight) / 2;
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
 
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        drawTexture(matrices, x + 156, y + (int)(46 * ((float)firstEnchantment / 38)) + 16, 176, 0, 12, 15);
+
         if (handler.slots.get(0).hasStack()) {
             for (int i = firstEnchantment, yDelta = 0; i <  firstEnchantment + 3; i++, yDelta++) {
                 Enchantment currentEnchantment = Registry.ENCHANTMENT.get(i);
@@ -67,7 +70,7 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
 
                     drawTexture(matrices, buttonX, buttonY, 0, isCursorOnButton ? 204 : 166, 110, 19);
 
-                    this.textRenderer.drawWithShadow(matrices, new TranslatableText(currentEnchantment.getTranslationKey()),buttonX + 2, buttonY + 4, (255 << 16) + (255 << 8) + 255);
+                    this.textRenderer.drawWithShadow(matrices, new TranslatableText(currentEnchantment.getTranslationKey()),buttonX + 2, buttonY + 4, WHITE);
                 }
             }
         }
@@ -79,8 +82,6 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
         //this.firstEnchantment++
         if (enchantments != null) {
             this.firstEnchantment = MathHelper.clamp((int)(firstEnchantment - amount), 0, Registry.ENCHANTMENT.getEntries().size() - 3);
-
-            System.out.println(firstEnchantment + " : " + amount + " ");
         }
 
         return true;
