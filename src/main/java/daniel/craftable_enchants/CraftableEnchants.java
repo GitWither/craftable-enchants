@@ -2,13 +2,13 @@ package daniel.craftable_enchants;
 
 import daniel.craftable_enchants.block.EnchantmentCraftingTableBlock;
 import daniel.craftable_enchants.client.screen.EnchantmentCraftingScreen;
+import daniel.craftable_enchants.item.EnchantmentFragmentItem;
 import daniel.craftable_enchants.screen.EnchantmentCraftingScreenHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -17,8 +17,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +28,7 @@ public class CraftableEnchants implements ClientModInitializer, DedicatedServerM
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     public static Block ENCHANTMENT_CRAFTING_TABLE;
+    public static Item ENCHANTMENT_FRAGMENT;
 
     public static ScreenHandlerType<EnchantmentCraftingScreenHandler> ENCHANTMENT_CRAFTING_SCREEN_HANDLER;
 
@@ -51,10 +52,17 @@ public class CraftableEnchants implements ClientModInitializer, DedicatedServerM
                 new EnchantmentCraftingTableBlock(AbstractBlock.Settings.of(Material.DECORATION))
         );
 
+        ENCHANTMENT_FRAGMENT = Registry.register(
+                Registry.ITEM,
+                new Identifier(MOD_ID, "enchantment_fragment"),
+                new EnchantmentFragmentItem(new Item.Settings().group(ItemGroup.TOOLS).maxCount(1).rarity(Rarity.RARE))
+        );
+
         Registry.register(
                 Registry.ITEM,
                 Registry.BLOCK.getId(ENCHANTMENT_CRAFTING_TABLE),
                 new BlockItem(ENCHANTMENT_CRAFTING_TABLE, new Item.Settings().group(ItemGroup.DECORATIONS))
         );
+
     }
 }

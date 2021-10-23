@@ -3,10 +3,13 @@ package daniel.craftable_enchants.screen;
 import daniel.craftable_enchants.CraftableEnchants;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
@@ -16,9 +19,12 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
     private final Inventory inventory;
     private Runnable inventoryChangeListener;
 
+    private final CraftingResultInventory result = new CraftingResultInventory();
+
     private final Slot bookSlot;
     private final Slot lapisSlot;
-    private final Slot itemSlot;
+    private final Slot fragmentSlot;
+
 
     public EnchantmentCraftingScreenHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, ScreenHandlerContext.EMPTY);
@@ -52,9 +58,23 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
                 return stack.isOf(Items.LAPIS_LAZULI);
             }
         });
-        itemSlot = this.addSlot(new Slot(this.inventory, 2, 55, 47) {
+        fragmentSlot = this.addSlot(new Slot(this.inventory, 2, 55, 47) {
             public boolean canInsert(ItemStack stack) {
-                return true;
+                return stack.isOf(CraftableEnchants.ENCHANTMENT_FRAGMENT);
+            }
+
+            public int getMaxItemCount() {
+                return 1;
+            }
+        });
+
+        this.addSlot(new Slot(this.result, 3, 89, 47) {
+            public boolean canInsert(ItemStack stack) {
+                return false;
+            }
+
+            public void onTakeItem(PlayerEntity player, ItemStack stack) {
+                onTakeOutput(player, stack);
             }
         });
 
@@ -72,8 +92,36 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
         this.context = context;
     }
 
+    private void onTakeOutput(PlayerEntity player, ItemStack stack) {
+
+    }
+
     public void setInventoryChangeListener(Runnable inventoryChangeListener) {
         this.inventoryChangeListener = inventoryChangeListener;
+    }
+
+    @Override
+    public void onContentChanged(Inventory inventory) {
+        super.onContentChanged(inventory);
+
+        if (inventory != this.inventory) return;
+
+        if (bookSlot.hasStack() && lapisSlot.hasStack() && fragmentSlot.hasStack()) {
+            ItemStack stack = Items.ENCHANTED_BOOK.getDefaultStack();
+
+            NbtList enchants = fragmentSlot.getStack().getNbt().getList(EnchantedBookItem.STORED_ENCHANTMENTS_KEY, 10);
+
+            if (enchants != null) {
+                stack.setSubNbt(EnchantedBookItem.STORED_ENCHANTMENTS_KEY, enchants.copy());
+            }
+
+            result.setStack(3, stack);
+        }
+    }
+
+    @Override
+    public ItemStack transferSlot(PlayerEntity player, int index) {
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -86,7 +134,7 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
     }
 
     public Slot getItemSlot() {
-        return itemSlot;
+        return fragmentSlot;
     }
 
     public Slot getBookSlot() {

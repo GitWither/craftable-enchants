@@ -1,4 +1,6 @@
 {
   "block.craftable_enchants.enchantment_crafting_table": "Enchantment Crafting Table",
+  "item.craftable_enchants.enchantment_fragment": "Enchantment Fragment",
+  "tooltip.craftable_enchants.uses_left": "Uses Left: %s",
   "container.enchantment_crafting": "Enchantment Crafting"
 }
