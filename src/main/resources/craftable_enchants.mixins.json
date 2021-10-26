@@ -4,6 +4,7 @@
   "package": "daniel.craftable_enchants.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "EnchantedBookMixin",
     "ItemEntityMixin"
   ],
   "client": [

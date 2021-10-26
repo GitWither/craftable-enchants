@@ -1,6 +1,7 @@
 package daniel.craftable_enchants.screen;
 
 import daniel.craftable_enchants.CraftableEnchants;
+import daniel.craftable_enchants.item.EnchantmentFragmentItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingResultInventory;
@@ -9,6 +10,8 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtByte;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -47,10 +50,6 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
         bookSlot = this.addSlot(new Slot(this.inventory, 0, 15, 47) {
             public boolean canInsert(ItemStack stack) {
                 return stack.isOf(Items.BOOK);
-            }
-
-            public int getMaxItemCount() {
-                return 1;
             }
         });
         lapisSlot = this.addSlot(new Slot(this.inventory, 1, 35, 47) {
@@ -93,7 +92,20 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
     }
 
     private void onTakeOutput(PlayerEntity player, ItemStack stack) {
+        bookSlot.takeStack(1);
+        lapisSlot.takeStack(1);
 
+        ItemStack fragmentItem = fragmentSlot.getStack();
+        NbtCompound fragmentNbt = fragmentItem.getNbt();
+        if (fragmentNbt != null) {
+            int usesLeft = fragmentNbt.getInt(EnchantmentFragmentItem.USES_KEY);
+
+            if (usesLeft > 1)
+                fragmentNbt.putInt(EnchantmentFragmentItem.USES_KEY, usesLeft - 1);
+            else {
+                fragmentSlot.setStack(ItemStack.EMPTY);
+            }
+        }
     }
 
     public void setInventoryChangeListener(Runnable inventoryChangeListener) {
@@ -114,19 +126,73 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
             if (enchants != null) {
                 stack.setSubNbt(EnchantedBookItem.STORED_ENCHANTMENTS_KEY, enchants.copy());
             }
+            stack.setSubNbt(EnchantmentFragmentItem.FROM_FRAGMENT_KEY, NbtByte.of((byte)1));
 
             result.setStack(3, stack);
+        }
+        else {
+            result.setStack(0, ItemStack.EMPTY);
         }
     }
 
     @Override
     public ItemStack transferSlot(PlayerEntity player, int index) {
-        return ItemStack.EMPTY;
+        ItemStack itemStack = ItemStack.EMPTY;
+
+        Slot slot = this.slots.get(index);
+        if (slot.hasStack()) {
+            ItemStack itemStack2 = slot.getStack();
+            itemStack = itemStack2.copy();
+            if (index < 4) {
+                if (!this.insertItem(itemStack2, 4, 38, true)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+            else if (itemStack2.isOf(Items.BOOK)) {
+                if (!this.slots.get(0).hasStack()) {
+                    ItemStack bookStack = itemStack2.copy();
+                    bookStack.setCount(1);
+                    itemStack2.decrement(1);
+                    this.slots.get(0).setStack(bookStack);
+                }
+            } else if (itemStack2.isOf(Items.LAPIS_LAZULI)) {
+                if (!this.insertItem(itemStack2, 1, 2, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (itemStack2.isOf(CraftableEnchants.ENCHANTMENT_FRAGMENT)) {
+                if (!this.insertItem(itemStack2, 2, 3, true)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (itemStack2.isEmpty()) {
+                slot.setStack(ItemStack.EMPTY);
+            } else {
+                slot.markDirty();
+            }
+
+            if (itemStack2.getCount() == itemStack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTakeItem(player, itemStack2);
+        }
+
+        return itemStack;
     }
 
     @Override
     public boolean canUse(PlayerEntity player) {
         return canUse(this.context, player, CraftableEnchants.ENCHANTMENT_CRAFTING_TABLE);
+    }
+
+    @Override
+    public void close(PlayerEntity player) {
+        super.close(player);
+
+        this.context.run(((world, blockPos) -> {
+            this.dropInventory(player, inventory);
+        }));
     }
 
     public Slot getLapisSlot() {

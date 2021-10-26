@@ -1,6 +1,7 @@
 package daniel.craftable_enchants.mixin;
 
 import daniel.craftable_enchants.CraftableEnchants;
+import daniel.craftable_enchants.item.EnchantmentFragmentItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -28,13 +29,18 @@ public abstract class ItemEntityMixin extends Entity {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ItemEntity;scheduleVelocityUpdate()V"), method = "damage", cancellable = true)
     public void convertEnchantingBookToFragment(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cb) {
         if (!this.getStack().isEmpty() && this.getStack().isOf(Items.ENCHANTED_BOOK) && source.getSource() instanceof CreeperEntity) {
-            ItemStack stack = CraftableEnchants.ENCHANTMENT_FRAGMENT.getDefaultStack();
-            NbtCompound enchant = this.getStack().getNbt();
-            if (enchant != null) {
-                enchant.putByte("Uses", (byte)5);
-                stack.setNbt(enchant.copy());
+            NbtCompound bookNbt = this.getStack().getNbt();
+            if (bookNbt != null) {
+                if (!this.getStack().getNbt().contains(EnchantmentFragmentItem.FROM_FRAGMENT_KEY)) {
+                    ItemStack stack = CraftableEnchants.ENCHANTMENT_FRAGMENT.getDefaultStack();
+                    NbtCompound enchant = this.getStack().getNbt();
+                    if (enchant != null) {
+                        enchant.putByte("Uses", (byte)5);
+                        stack.setNbt(enchant.copy());
+                    }
+                    ItemEntity entity = this.dropStack(stack);
+                }
             }
-            ItemEntity entity = this.dropStack(stack);
         }
     }
 }

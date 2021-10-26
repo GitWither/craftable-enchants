@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "craftable_enchants:block/enchantment_crafting_table"
+    },
+    "facing=east": {
+      "model": "craftable_enchants:block/enchantment_crafting_table",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "craftable_enchants:block/enchantment_crafting_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "craftable_enchants:block/enchantment_crafting_table",
+      "y": 270
+    }
+  }
+}
