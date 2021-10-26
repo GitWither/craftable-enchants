@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.RandomUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,7 +36,7 @@ public abstract class ItemEntityMixin extends Entity {
                     ItemStack stack = CraftableEnchants.ENCHANTMENT_FRAGMENT.getDefaultStack();
                     NbtCompound enchant = this.getStack().getNbt();
                     if (enchant != null) {
-                        enchant.putByte("Uses", (byte)5);
+                        enchant.putByte("Uses", (byte)RandomUtils.nextInt(4, 9));
                         stack.setNbt(enchant.copy());
                     }
                     ItemEntity entity = this.dropStack(stack);
