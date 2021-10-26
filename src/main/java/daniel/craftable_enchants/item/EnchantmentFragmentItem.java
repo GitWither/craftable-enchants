@@ -5,8 +5,11 @@ import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +17,7 @@ import java.util.List;
 
 public class EnchantmentFragmentItem extends Item {
     public static final String USES_KEY = "Uses";
+    public static final String FROM_FRAGMENT_KEY = "FromFragment";
 
     public EnchantmentFragmentItem(Settings settings) {
         super(settings);
@@ -24,7 +28,7 @@ public class EnchantmentFragmentItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
         ItemStack.appendEnchantments(tooltip, EnchantedBookItem.getEnchantmentNbt(stack));
 
-        tooltip.add(new TranslatableText("tooltip.craftable_enchants.uses_left", getUsesNbt(stack)));
+        tooltip.add(new TranslatableText("tooltip.craftable_enchants.uses_left", getUsesNbt(stack)).setStyle(Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.AQUA))));
     }
 
     public static byte getUsesNbt(ItemStack book) {
