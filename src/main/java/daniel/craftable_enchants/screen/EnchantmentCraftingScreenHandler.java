@@ -149,11 +149,8 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
                 }
             }
             else if (itemStack2.isOf(Items.BOOK)) {
-                if (!this.slots.get(0).hasStack()) {
-                    ItemStack bookStack = itemStack2.copy();
-                    bookStack.setCount(1);
-                    itemStack2.decrement(1);
-                    this.slots.get(0).setStack(bookStack);
+                if (!this.insertItem(itemStack2, 0, 1, true)) {
+                    return ItemStack.EMPTY;
                 }
             } else if (itemStack2.isOf(Items.LAPIS_LAZULI)) {
                 if (!this.insertItem(itemStack2, 1, 2, true)) {
