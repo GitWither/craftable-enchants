@@ -47,17 +47,17 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
             }
         };
 
-        bookSlot = this.addSlot(new Slot(this.inventory, 0, 41, 16) {
+        bookSlot = this.addSlot(new Slot(this.inventory, 0, 58, 15) {
             public boolean canInsert(ItemStack stack) {
                 return stack.isOf(Items.BOOK);
             }
         });
-        lapisSlot = this.addSlot(new Slot(this.inventory, 1, 80, 16) {
+        lapisSlot = this.addSlot(new Slot(this.inventory, 1, 80, 15) {
             public boolean canInsert(ItemStack stack) {
                 return stack.isOf(Items.LAPIS_LAZULI);
             }
         });
-        fragmentSlot = this.addSlot(new Slot(this.inventory, 2, 119, 16) {
+        fragmentSlot = this.addSlot(new Slot(this.inventory, 2, 102, 15) {
             public boolean canInsert(ItemStack stack) {
                 return stack.isOf(CraftableEnchants.ENCHANTMENT_FRAGMENT);
             }
@@ -67,7 +67,7 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
             }
         });
 
-        this.addSlot(new Slot(this.result, 3, 80, 62) {
+        this.addSlot(new Slot(this.result, 3, 80, 59) {
             public boolean canInsert(ItemStack stack) {
                 return false;
             }

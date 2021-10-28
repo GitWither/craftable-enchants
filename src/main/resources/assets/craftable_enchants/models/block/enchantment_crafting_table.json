@@ -1,48 +1,51 @@
 {
-	"credit": "Made by Daniel K. with Blockbench",
+	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"ambientocclusion": false,
+	"textures": {
+		"0": "craftable_enchants:block/enchantment_crafting_table_base",
+		"1": "craftable_enchants:block/enchantment_crafting_table_top",
+		"2": "craftable_enchants:block/enchantment_crafting_table_front",
+		"3": "craftable_enchants:block/enchantment_crafting_table_side",
+		"4": "craftable_enchants:block/enchantment_crafting_table_top_side",
+		"5": "craftable_enchants:block/enchantment_crafting_table_top_bottom",
+		"particle": "craftable_enchants:block/enchantment_crafting_table_base"
+	},
 	"elements": [
 		{
 			"from": [0, 0, 0],
-			"to": [16, 8, 16],
+			"to": [16, 6, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 16]},
-			"color": 3,
 			"faces": {
-				"north": {"uv": [0, 0, 16, 8], "texture": "#missing"},
-				"east": {"uv": [0, 0, 16, 8], "texture": "#missing"},
-				"south": {"uv": [0, 0, 16, 8], "texture": "#missing"},
-				"west": {"uv": [0, 0, 16, 8], "texture": "#missing"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#missing"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#missing"}
+				"north": {"uv": [0, 10, 16, 16], "texture": "#2"},
+				"east": {"uv": [0, 10, 16, 16], "texture": "#3"},
+				"south": {"uv": [0, 10, 16, 16], "texture": "#3"},
+				"west": {"uv": [0, 10, 16, 16], "texture": "#3"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"}
 			}
 		},
 		{
-			"from": [4, 6, 2],
+			"from": [4, 6, 3],
 			"to": [12, 15, 12],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, -3, 16]},
-			"color": 3,
 			"faces": {
-				"north": {"uv": [8, 0, 16, 9], "texture": "#missing"},
-				"east": {"uv": [6, 0, 16, 9], "texture": "#missing"},
-				"south": {"uv": [8, 0, 16, 9], "texture": "#missing"},
-				"west": {"uv": [6, 0, 16, 9], "texture": "#missing"},
-				"up": {"uv": [0, 6, 8, 16], "texture": "#missing"},
-				"down": {"uv": [0, 6, 8, 16], "texture": "#missing"}
+				"north": {"uv": [0, 2, 9, 10], "rotation": 90, "texture": "#2"},
+				"east": {"uv": [0, 10, 8, 2], "rotation": 90, "texture": "#3"},
+				"south": {"uv": [0, 10, 8, 2], "rotation": 90, "texture": "#3"},
+				"west": {"uv": [0, 10, 8, 2], "rotation": 90, "texture": "#3"}
 			}
 		},
 		{
-			"from": [0, 15, 8],
-			"to": [16, 19, 21],
-			"rotation": {"angle": -22.5, "axis": "x", "origin": [0, -3, 16]},
-			"color": 3,
+			"from": [0, 12.90357, 0],
+			"to": [16, 16.90357, 13],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 14.90357, 6.96051]},
 			"faces": {
-				"north": {"uv": [0, 0, 16, 4], "texture": "#missing"},
-				"east": {"uv": [3, 0, 16, 4], "texture": "#missing"},
-				"south": {"uv": [0, 0, 16, 4], "texture": "#missing"},
-				"west": {"uv": [3, 0, 16, 4], "texture": "#missing"},
-				"up": {"uv": [0, 3, 16, 16], "texture": "#missing"},
-				"down": {"uv": [0, 3, 16, 16], "texture": "#missing"}
+				"north": {"uv": [0, 12, 16, 16], "texture": "#4"},
+				"east": {"uv": [0, 4, 13, 8], "texture": "#4"},
+				"south": {"uv": [0, 0, 16, 4], "texture": "#4"},
+				"west": {"uv": [0, 8, 13, 12], "texture": "#4"},
+				"up": {"uv": [0, 3, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 3, 16, 16], "texture": "#5"}
 			}
 		}
 	]

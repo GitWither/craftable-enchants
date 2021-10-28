@@ -41,6 +41,8 @@ public class EnchantmentCraftingScreen extends HandledScreen<ScreenHandler> {
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+
+        //TODO: Add icons representing items
     }
 
 
