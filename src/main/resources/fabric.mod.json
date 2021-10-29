@@ -3,14 +3,15 @@
   "id": "craftable_enchants",
   "version": "${version}",
   "name": "Craftable Enchantments",
-  "description": "Adds an enchantment crafting table that lets you craft all the enchantments in the game",
+  "description": "Adds a fun way to craft enchantments to the game through the use of an Enchantment Crafting Table and Enchantment Fragments",
   "authors": [
     "Daniel K."
   ],
   "contact": {
-    "issues": "",
-    "homepage": "",
-    "discord": "https://discord.gg/WtdP245E8Q"
+    "issues": "https://github.com/GitWither/craftable-enchants/issues",
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/fabric-craftable-enchantments",
+    "discord": "https://discord.gg/WtdP245E8Q",
+    "sources": "https://github.com/GitWither/craftable-enchants"
   },
   "license": "MIT",
   "icon": "assets/craftable_enchants/icon.png",

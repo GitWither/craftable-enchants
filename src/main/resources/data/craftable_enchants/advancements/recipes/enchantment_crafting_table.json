@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "craftable_enchants:enchantment_crafting_table"
+    ]
+  },
+  "criteria": {
+    "has_lectern": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:lectern"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_lectern"
+    ]
+  ]
+}
