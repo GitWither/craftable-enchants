@@ -10,7 +10,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.stat.Stats;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.text.Text;
@@ -28,7 +28,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-//TODO: Add voxelshape based on rotation
 public class EnchantmentCraftingTableBlock extends Block {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final Text TITLE = new TranslatableText("container.enchantment_crafting");
@@ -40,7 +39,7 @@ public class EnchantmentCraftingTableBlock extends Block {
     public static final VoxelShape BASE_COLUMN_EAST= Block.createCuboidShape(4.0, 6.0, 4.0, 13.0, 14.8, 12.0);
     public static final VoxelShape BASE_COLUMN_WEST = Block.createCuboidShape(3.0, 6.0, 4.0, 12.0, 14.8, 12.0);
 
-    //values generated with Blockbench plugin Mod Utils originally made by me and currently maintained by JTK222
+    //Values generated with Blockbench plugin Mod Utils originally made by me and currently maintained by JTK222. This is quite cringe tbh.
     public static final VoxelShape TABLE_NORTH = VoxelShapes.union(
             Block.createCuboidShape(0, 10.903565501678102, 0.9105120539312768, 16, 14.903565501678102, 5.210512085720419),
             Block.createCuboidShape(0, 12.903565501678102, 5.210512053931277, 16, 16.903565501678102, 9.54384538726461),
@@ -71,6 +70,11 @@ public class EnchantmentCraftingTableBlock extends Block {
         super(settings);
 
         this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+    }
+
+    @Override
+    public BlockSoundGroup getSoundGroup(BlockState state) {
+        return BlockSoundGroup.COPPER;
     }
 
     @Override
@@ -114,10 +118,12 @@ public class EnchantmentCraftingTableBlock extends Block {
             return ActionResult.SUCCESS;
         } else {
             player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
-            player.incrementStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
+            //I probably should have added a statistic to count interactions with this, but it's a PITA and useless so instead there is this comment
             return ActionResult.CONSUME;
         }
     }
+
+
 
     @Nullable
     @Override

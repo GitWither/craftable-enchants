@@ -16,6 +16,8 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 
 public class EnchantmentCraftingScreenHandler extends ScreenHandler {
     private final ScreenHandlerContext context;
@@ -104,8 +106,15 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
                 fragmentNbt.putInt(EnchantmentFragmentItem.USES_KEY, usesLeft - 1);
             else {
                 fragmentSlot.setStack(ItemStack.EMPTY);
+
+                this.context.run((world, blockPos) -> {
+                    world.playSound((PlayerEntity)null, blockPos, SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK, SoundCategory.BLOCKS, 1.0F, world.random.nextFloat() * 0.1F + 0.8F);
+                });
             }
         }
+        this.context.run((world, pos) -> {
+            world.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, world.random.nextFloat() * 0.1F + 0.8F);
+        });
     }
 
     public void setInventoryChangeListener(Runnable inventoryChangeListener) {
@@ -119,16 +128,18 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
         if (inventory != this.inventory) return;
 
         if (bookSlot.hasStack() && lapisSlot.hasStack() && fragmentSlot.hasStack()) {
-            ItemStack stack = Items.ENCHANTED_BOOK.getDefaultStack();
+            if (fragmentSlot.getStack().hasNbt()) {
+                ItemStack stack = Items.ENCHANTED_BOOK.getDefaultStack();
 
-            NbtList enchants = fragmentSlot.getStack().getNbt().getList(EnchantedBookItem.STORED_ENCHANTMENTS_KEY, 10);
+                NbtList enchants = fragmentSlot.getStack().getNbt().getList(EnchantedBookItem.STORED_ENCHANTMENTS_KEY, 10);
 
-            if (enchants != null) {
-                stack.setSubNbt(EnchantedBookItem.STORED_ENCHANTMENTS_KEY, enchants.copy());
+                if (enchants != null) {
+                    stack.setSubNbt(EnchantedBookItem.STORED_ENCHANTMENTS_KEY, enchants.copy());
+                }
+                stack.setSubNbt(EnchantmentFragmentItem.FROM_FRAGMENT_KEY, NbtByte.of((byte)1));
+
+                result.setStack(3, stack);
             }
-            stack.setSubNbt(EnchantmentFragmentItem.FROM_FRAGMENT_KEY, NbtByte.of((byte)1));
-
-            result.setStack(3, stack);
         }
         else {
             result.setStack(0, ItemStack.EMPTY);

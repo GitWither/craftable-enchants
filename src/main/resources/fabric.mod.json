@@ -5,9 +5,13 @@
   "name": "Craftable Enchantments",
   "description": "Adds an enchantment crafting table that lets you craft all the enchantments in the game",
   "authors": [
-    "Daniel"
+    "Daniel K."
   ],
-  "contact": {},
+  "contact": {
+    "issues": "",
+    "homepage": "",
+    "discord": "https://discord.gg/WtdP245E8Q"
+  },
   "license": "MIT",
   "icon": "assets/craftable_enchants/icon.png",
   "environment": "*",
