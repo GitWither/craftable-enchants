@@ -2,6 +2,8 @@ package daniel.craftable_enchants.screen;
 
 import daniel.craftable_enchants.CraftableEnchants;
 import daniel.craftable_enchants.item.EnchantmentFragmentItem;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingResultInventory;
@@ -18,6 +20,8 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+
+import java.util.Map;
 
 public class EnchantmentCraftingScreenHandler extends ScreenHandler {
     private final ScreenHandlerContext context;
@@ -51,7 +55,7 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
 
         bookSlot = this.addSlot(new Slot(this.inventory, 0, 58, 15) {
             public boolean canInsert(ItemStack stack) {
-                return stack.isOf(Items.BOOK);
+                return stack.isOf(Items.BOOK) || CraftableEnchants.isBookFromFragment(stack);
             }
         });
         lapisSlot = this.addSlot(new Slot(this.inventory, 1, 80, 15) {
@@ -129,16 +133,21 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
 
         if (bookSlot.hasStack() && lapisSlot.hasStack() && fragmentSlot.hasStack()) {
             if (fragmentSlot.getStack().hasNbt()) {
-                ItemStack stack = Items.ENCHANTED_BOOK.getDefaultStack();
+                ItemStack outputBook = Items.ENCHANTED_BOOK.getDefaultStack();
 
-                NbtList enchants = fragmentSlot.getStack().getNbt().getList(EnchantedBookItem.STORED_ENCHANTMENTS_KEY, 10);
+                //get all fragment enchantments, 10 = compound
+                //NbtList enchants = fragmentSlot.getStack().getNbt().getList(EnchantedBookItem.STORED_ENCHANTMENTS_KEY, 10);
+                Map<Enchantment, Integer> fragmentEnchants = EnchantmentHelper.fromNbt(EnchantedBookItem.getEnchantmentNbt(fragmentSlot.getStack()));
 
-                if (enchants != null) {
-                    stack.setSubNbt(EnchantedBookItem.STORED_ENCHANTMENTS_KEY, enchants.copy());
+                //if input book has any enchants, merge them with output book
+                if (bookSlot.getStack().isOf(Items.ENCHANTED_BOOK)) {
+                    fragmentEnchants.putAll(EnchantmentHelper.get(bookSlot.getStack()));
                 }
-                stack.setSubNbt(EnchantmentFragmentItem.FROM_FRAGMENT_KEY, NbtByte.of((byte)1));
 
-                result.setStack(3, stack);
+                EnchantmentHelper.set(fragmentEnchants, outputBook);
+                outputBook.setSubNbt(EnchantmentFragmentItem.FROM_FRAGMENT_KEY, NbtByte.of((byte)1));
+
+                result.setStack(3, outputBook);
             }
         }
         else {
@@ -148,18 +157,18 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
 
     @Override
     public ItemStack transferSlot(PlayerEntity player, int index) {
-        ItemStack itemStack = ItemStack.EMPTY;
+        ItemStack emptyItem = ItemStack.EMPTY;
 
         Slot slot = this.slots.get(index);
         if (slot.hasStack()) {
             ItemStack itemStack2 = slot.getStack();
-            itemStack = itemStack2.copy();
+            emptyItem = itemStack2.copy();
             if (index < 4) {
                 if (!this.insertItem(itemStack2, 4, 38, true)) {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (itemStack2.isOf(Items.BOOK)) {
+            else if (itemStack2.isOf(Items.BOOK) || CraftableEnchants.isBookFromFragment(itemStack2)) {
                 if (!this.insertItem(itemStack2, 0, 1, true)) {
                     return ItemStack.EMPTY;
                 }
@@ -179,14 +188,14 @@ public class EnchantmentCraftingScreenHandler extends ScreenHandler {
                 slot.markDirty();
             }
 
-            if (itemStack2.getCount() == itemStack.getCount()) {
+            if (itemStack2.getCount() == emptyItem.getCount()) {
                 return ItemStack.EMPTY;
             }
 
             slot.onTakeItem(player, itemStack2);
         }
 
-        return itemStack;
+        return emptyItem;
     }
 
     @Override

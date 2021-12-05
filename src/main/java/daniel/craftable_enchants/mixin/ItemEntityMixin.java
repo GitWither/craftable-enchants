@@ -46,7 +46,7 @@ public abstract class ItemEntityMixin extends Entity {
                         ItemStack stack = CraftableEnchants.ENCHANTMENT_FRAGMENT.getDefaultStack();
                         NbtCompound enchant = stack.getOrCreateNbt();
                         if (enchant != null) {
-                            enchant.putByte("Uses", (byte)RandomUtils.nextInt(4, 9));
+                            enchant.putByte(EnchantmentFragmentItem.USES_KEY, (byte)RandomUtils.nextInt(4, 9));
                         }
                         EnchantedBookItem.addEnchantment(stack, new EnchantmentLevelEntry(enchantment, enchantments.get(enchantment)));
                         ItemEntity entity = this.dropStack(stack);

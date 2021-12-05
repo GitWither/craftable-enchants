@@ -12,9 +12,8 @@ import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.*;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
@@ -31,6 +30,17 @@ public class CraftableEnchants implements ClientModInitializer, DedicatedServerM
     public static Item ENCHANTMENT_FRAGMENT;
 
     public static ScreenHandlerType<EnchantmentCraftingScreenHandler> ENCHANTMENT_CRAFTING_SCREEN_HANDLER;
+
+    public static boolean isBookFromFragment(ItemStack item) {
+        if (!item.isOf(Items.ENCHANTED_BOOK)) return false;
+
+        NbtCompound nbt = item.getNbt();
+        if (nbt != null) {
+            return nbt.contains(EnchantmentFragmentItem.FROM_FRAGMENT_KEY);
+        }
+
+        return false;
+    }
 
     @Override
     public void onInitializeClient() {
