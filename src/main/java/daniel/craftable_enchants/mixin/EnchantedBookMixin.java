@@ -7,7 +7,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +24,7 @@ public class EnchantedBookMixin {
     public void setFromFragmentTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context, CallbackInfo cb) {
         NbtCompound nbt = stack.getNbt();
         if (nbt != null && nbt.contains("FromFragment")) {
-            tooltip.add(new TranslatableText("tooltip.craftable_enchants.reconstructed").setStyle(Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.AQUA))));
+            tooltip.add(Text.translatable("tooltip.craftable_enchants.reconstructed").setStyle(Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.AQUA))));
         }
     }
 }

@@ -22,7 +22,18 @@
     ],
     "client": [
       "daniel.craftable_enchants.CraftableEnchants"
+    ],
+    "fabric-gametest" : [
+      "daniel.craftable_enchants.test.CraftableEnchantsTestSuite"
     ]
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/b79VpMbkey",
+        "modmenu.twitter": "https://twitter.com/_Daniel_K_"
+      }
+    }
   },
   "mixins": [
     "craftable_enchants.mixins.json"
@@ -30,7 +41,6 @@
   "depends": {
     "fabricloader": ">=0.12.2",
     "fabric": "*",
-    "java": "17",
-    "minecraft": "1.18.x"
+    "minecraft": "1.19.x"
   }
 }

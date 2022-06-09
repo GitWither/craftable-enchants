@@ -8,7 +8,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +27,7 @@ public class EnchantmentFragmentItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
         ItemStack.appendEnchantments(tooltip, EnchantedBookItem.getEnchantmentNbt(stack));
 
-        tooltip.add(new TranslatableText("tooltip.craftable_enchants.uses_left", getUsesNbt(stack)).setStyle(Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.AQUA))));
+        tooltip.add(Text.translatable("tooltip.craftable_enchants.uses_left", getUsesNbt(stack)).setStyle(Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.AQUA))));
     }
 
     public static byte getUsesNbt(ItemStack book) {

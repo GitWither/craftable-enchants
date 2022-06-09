@@ -14,7 +14,6 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -30,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class EnchantmentCraftingTableBlock extends Block {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final Text TITLE = new TranslatableText("container.enchantment_crafting");
+    public static final Text TITLE = Text.translatable("container.enchantment_crafting");
 
     public static final VoxelShape BASE_PLATE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 6.0, 16.0);
 
